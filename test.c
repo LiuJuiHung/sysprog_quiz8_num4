@@ -1,9 +1,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "parity.h"
+
+#define REPEAT 20
+#define INIT_VAL 1000000
+#define END_VAL 1000020
 
 double tvgetf()
 {
@@ -18,8 +23,8 @@ double tvgetf()
 
 void parityTest()
 {
-    FILE *file = fopen("parity.txt", "w");
-    if (file == NULL) {
+    FILE *file1 = fopen("parity_heatmap.txt", "w");
+    if (file1 == NULL) {
         printf("Error opening file!\n");
         exit(1);
     }
@@ -27,23 +32,27 @@ void parityTest()
     double tm;
     int parity_bit;
 
-    for (int i = 0; i < 100; ++i) {
-        x = (uint32_t) i;
-        tm = tvgetf();
-        parity_bit = parityGen(x);
-        tm -= tvgetf();
-        fprintf(file, "%u %f\n", x, -tm);
+    for (int i = 0; i < REPEAT; i++) {
+        for (int j = INIT_VAL; j < END_VAL; j++) {
+            x = (uint32_t) j;
+            tm = tvgetf();
+            parity_bit = parityGen(x);
+            tm -= tvgetf();
+            fprintf(file1, "%d %d %f\n", i, j, -tm);
+        }
     }
-    fclose(file);
+    fclose(file1);
 }
 
 int main(int argc, char *argv[])
 {
+    if (argc == 1) {
+        printf("no args\n");
+        return 0;
+    }
     switch (*argv[1]) {
     case '1':
-        printf("parity test start\n");
         parityTest();
-        printf("end test\n");
         break;
     default:
         printf("no test\n");
