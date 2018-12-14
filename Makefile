@@ -15,12 +15,12 @@ $(TEST):
 
 perf:
 	echo 3 | sudo tee /proc/sys/vm/drop_caches;
-	perf stat --repeat 100 \
+	sudo taskset -c 0 nice --adjustment=-20 \
+		perf stat \
 		-e cache-misses,cache-references,instructions,cycles \
 		./test 1
 plot:
-	gnuplot scripts/runtimeParity.gp
-	eog runtimeParity.png 
+	gnuplot scripts/parityHeatmap.gp
 
 clean:
 	rm -f *.txt *.png test
