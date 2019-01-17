@@ -20,7 +20,7 @@ perf:
 		-e cache-misses,cache-references,instructions,cycles \
 		./test 1
 plot:
-	gnuplot scripts/parityHeatmap.gp
+	gnuplot scripts/num4Heatmap.gp
 
 clean:
 	rm -f *.txt *.png test
